@@ -17,7 +17,7 @@ public class Product {
   public Product() {
   }
 
-  public Product(Long id, String nome, String description) {
+  public Product(Long id, String name, String description) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -31,11 +31,11 @@ public class Product {
     this.id = id;
   }
 
-  public String getNome() {
+  public String getname() {
     return name;
   }
 
-  public void setNome(String name) {
+  public void setname(String name) {
     this.name = name;
   }
 
