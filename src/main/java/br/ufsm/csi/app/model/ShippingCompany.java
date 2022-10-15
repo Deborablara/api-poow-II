@@ -4,20 +4,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-public class Client {
+public class ShippingCompany {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
-
-  public Client() {
-  }
-
-  public Client(Long id, String name) {
-    this.id = id;
-    this.name = name;
-  }
 
   public Long getId() {
     return id;
@@ -27,12 +19,11 @@ public class Client {
     this.id = id;
   }
 
-  public String getname() {
+  public String getName() {
     return name;
   }
 
-  public void setname(String name) {
+  public void setName(String name) {
     this.name = name;
   }
-
 }
