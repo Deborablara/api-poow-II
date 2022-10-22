@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 @Entity
-public class Order {
+public class Request {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
