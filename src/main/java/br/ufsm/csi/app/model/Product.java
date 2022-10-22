@@ -17,14 +17,16 @@ public class Product {
 
   private String name;
   private String description;
+  private Boolean active = true;
 
   public Product() {
   }
 
-  public Product(Long id, String name, String description) {
+  public Product(Long id, String name, String description, Boolean active) {
     this.id = id;
     this.name = name;
     this.description = description;
+    this.active = active;
   }
 
   public Long getId() {
@@ -49,6 +51,14 @@ public class Product {
 
   public void setDescription(String description) {
     this.description = description;
+  }
+
+  public Boolean getActive() {
+    return active;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
   }
 
 }
