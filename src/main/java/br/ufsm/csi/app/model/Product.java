@@ -17,13 +17,12 @@ public class Product {
 
   private String name;
   private String description;
-  private Boolean active = true;
+  private Boolean active;
 
   public Product() {
   }
 
-  public Product(Long id, String name, String description, Boolean active) {
-    this.id = id;
+  public Product(String name, String description, Boolean active) {
     this.name = name;
     this.description = description;
     this.active = active;
