@@ -9,17 +9,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
 import br.ufsm.csi.app.model.Client;
 import br.ufsm.csi.app.repository.ClientRepository;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/clients")
-public class ClienteController {
+public class ClientController {
 
   @Autowired
   private ClientRepository clientRepository;
@@ -29,6 +31,13 @@ public class ClienteController {
     Client client = clientRepository.getReferenceById(id);
 
     return ResponseEntity.ok(client);
+  }
+
+  @GetMapping()
+  public List<Client> getClients(){
+    List<Client> clients  = clientRepository.findAll();
+
+    return clients;
   }
 
   @PostMapping("/new")
@@ -42,5 +51,23 @@ public class ClienteController {
 
     return ResponseEntity.created(uri).body(client);
   }
+
+  @PutMapping("/update/{id}")
+  @Transactional
+  public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client values){
+    Client client = clientRepository.getReferenceById(id);
+    client.setname(values.getname());
+
+    clientRepository.save(client);
+    return ResponseEntity.ok(client);
+  }
+
+  @PutMapping("/{id}")
+  @Transactional
+  public int desactiveClient(@PathVariable Long id){
+    return clientRepository.desactiveClient(id);
+  }
+
+
 
 }

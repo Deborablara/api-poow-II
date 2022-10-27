@@ -17,6 +17,7 @@ public class Client {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
+  private Boolean active = true;
 
   public Client() {
   }
@@ -41,4 +42,11 @@ public class Client {
     this.name = name;
   }
 
+  public Boolean getActive() {
+    return active;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 }
