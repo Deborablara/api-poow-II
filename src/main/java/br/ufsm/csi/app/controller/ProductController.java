@@ -48,16 +48,12 @@ public class ProductController {
     return ResponseEntity.ok().build();
   }
 
-  @PutMapping("/{id}")
-  @Transactional
-  public ResponseEntity<?> desactiveProdcut(@PathVariable Long id) {
-    Product product = productRepository.getReferenceById(id);
-    product.setActive(false);
-
-    productRepository.save(product);
-
-    return ResponseEntity.ok().build();
-  }
+  // @PutMapping("/{id}")
+  // @Transactional
+  // public ResponseEntity<?> desactiveProdcut(@PathVariable Long id) {
+  // productRepository.desactiveProduct(id);
+  // return ResponseEntity.ok().build();
+  // }
 
   @PutMapping("/update/{id}")
   @Transactional
