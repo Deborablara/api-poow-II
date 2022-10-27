@@ -57,8 +57,7 @@ public class ClientController {
   public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client values){
     Client client = clientRepository.getReferenceById(id);
     client.setname(values.getname());
-
-    clientRepository.save(client);
+    
     return ResponseEntity.ok(client);
   }
 
