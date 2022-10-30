@@ -7,8 +7,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Entity
+@Table(name = "request")
 public class Request {
 
   @Id
@@ -27,6 +32,9 @@ public class Request {
 
   @Enumerated(EnumType.STRING)
   private Status status = Status.WAITING_FOR_PRODUCTION;
+
+  public Request() {
+  }
 
   public Long getId() {
     return id;

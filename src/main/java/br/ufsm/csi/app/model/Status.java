@@ -7,4 +7,5 @@ public enum Status {
   WAITING_VEHICLE,
   IN_TRANSIT,
   DELIVERED,
+  CANCELLED,
 }
