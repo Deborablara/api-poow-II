@@ -19,7 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.ufsm.csi.app.model.ShippingCompany;
 import br.ufsm.csi.app.repository.ShippingCompanyRepository;
 
-
 @RestController
 @RequestMapping("/shipping-company")
 public class ShippingCompanyController {
@@ -28,14 +27,14 @@ public class ShippingCompanyController {
     private ShippingCompanyRepository shippingCompanyRepository;
 
     @GetMapping()
-    public List<ShippingCompany> getShippingCompanies(){
+    public List<ShippingCompany> getShippingCompanies() {
         List<ShippingCompany> shippingCompanies = shippingCompanyRepository.findAll();
 
         return shippingCompanies;
     }
 
     @GetMapping("/{id}")
-    public ShippingCompany getShippingCompany(@PathVariable Long id){
+    public ShippingCompany getShippingCompany(@PathVariable Long id) {
         ShippingCompany shippingCompany = shippingCompanyRepository.getReferenceById(id);
 
         return shippingCompany;
@@ -43,7 +42,7 @@ public class ShippingCompanyController {
 
     @PutMapping("/{id}")
     @Transactional
-    public int desactiveShippingCompany(@PathVariable Long id){
+    public int desactiveShippingCompany(@PathVariable Long id) {
         return shippingCompanyRepository.desactiveShippingCompany(id);
 
     }
@@ -51,8 +50,8 @@ public class ShippingCompanyController {
     @PostMapping("/new")
     @Transactional
     public ResponseEntity<?> newShippingCompany(
-        @RequestBody ShippingCompany values,
-         UriComponentsBuilder uBuilder){
+            @RequestBody ShippingCompany values,
+            UriComponentsBuilder uBuilder) {
         ShippingCompany shippingCompany = new ShippingCompany(values.getName(), values.getActive());
 
         shippingCompanyRepository.save(shippingCompany);
@@ -63,7 +62,8 @@ public class ShippingCompanyController {
 
     @PutMapping("/update/{id}")
     @Transactional
-    public ResponseEntity<ShippingCompany> updateShippingCompany(@PathVariable Long id, @RequestBody ShippingCompany values){
+    public ResponseEntity<ShippingCompany> updateShippingCompany(@PathVariable Long id,
+            @RequestBody ShippingCompany values) {
         ShippingCompany shippingCompany = shippingCompanyRepository.getReferenceById(id);
 
         shippingCompany.setName(values.getName());
@@ -72,5 +72,5 @@ public class ShippingCompanyController {
         return ResponseEntity.ok(shippingCompany);
 
     }
-    
+
 }
