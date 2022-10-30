@@ -51,7 +51,7 @@ public class VehicleController {
   @Transactional
   public ResponseEntity<?> newVehicle(@RequestBody VehicleForm values, UriComponentsBuilder uBuilder) {
 
-    Vehicle vehicle = values.convert(shippingCompanyRepository);
+    Vehicle vehicle = values.newVehicle(shippingCompanyRepository);
     vehicleRepository.save(vehicle);
 
     vehicleRepository.save(vehicle);

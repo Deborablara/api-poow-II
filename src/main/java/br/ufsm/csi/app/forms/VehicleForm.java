@@ -33,7 +33,7 @@ public class VehicleForm {
     this.shippingCompanyId = shippingCompanyId;
   }
 
-  public Vehicle convert(ShippingCompanyRepository shippingCompanyRepository) {
+  public Vehicle newVehicle(ShippingCompanyRepository shippingCompanyRepository) {
     ShippingCompany company = shippingCompanyRepository.getReferenceById(this.shippingCompanyId);
 
     return new Vehicle(this.plateNumber, company);
