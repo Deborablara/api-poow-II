@@ -54,7 +54,6 @@ public class VehicleController {
     Vehicle vehicle = values.newVehicle(shippingCompanyRepository);
     vehicleRepository.save(vehicle);
 
-    vehicleRepository.save(vehicle);
     URI uri = uBuilder.path("vehicle/{id}").buildAndExpand(vehicle.getId()).toUri();
 
     return ResponseEntity.created(uri).body(vehicle);
