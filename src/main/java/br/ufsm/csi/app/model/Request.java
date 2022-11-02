@@ -36,6 +36,13 @@ public class Request {
   public Request() {
   }
 
+  public Request(Client client, Vehicle vehicle, Product product, Float amount) {
+    this.client = client;
+    this.vehicle = vehicle;
+    this.product = product;
+    this.amount = amount;
+  }
+
   public Long getId() {
     return id;
   }
