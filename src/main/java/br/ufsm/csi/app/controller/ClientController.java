@@ -34,8 +34,8 @@ public class ClientController {
   }
 
   @GetMapping()
-  public List<Client> getClients(){
-    List<Client> clients  = clientRepository.findAll();
+  public List<Client> getClients() {
+    List<Client> clients = clientRepository.findAll();
 
     return clients;
   }
@@ -54,19 +54,18 @@ public class ClientController {
 
   @PutMapping("/update/{id}")
   @Transactional
-  public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client values){
+  public ResponseEntity<Client> updateClient(@PathVariable Long id, @RequestBody Client values) {
+    System.out.println(values.getname());
     Client client = clientRepository.getReferenceById(id);
     client.setname(values.getname());
-    
+
     return ResponseEntity.ok(client);
   }
 
   @PutMapping("/{id}")
   @Transactional
-  public int desactiveClient(@PathVariable Long id){
+  public int desactiveClient(@PathVariable Long id) {
     return clientRepository.desactiveClient(id);
   }
-
-
 
 }

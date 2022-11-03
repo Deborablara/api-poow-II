@@ -11,6 +11,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
   @Modifying
   @Query("UPDATE Request r SET r.status = ?1 WHERE r.id = ?2")
-  int changeStatus(Enum<Status> status, Long id);
+  int changeStatus(Status status, Long id);
 
 }

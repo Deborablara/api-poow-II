@@ -9,13 +9,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import br.ufsm.csi.app.forms.RequestForm;
+import br.ufsm.csi.app.forms.StatusForm;
 import br.ufsm.csi.app.model.Request;
+import br.ufsm.csi.app.model.Status;
 import br.ufsm.csi.app.repository.ClientRepository;
 import br.ufsm.csi.app.repository.ProductRepository;
 import br.ufsm.csi.app.repository.RequestRepository;
@@ -57,10 +63,10 @@ public class RequestController {
     return ResponseEntity.created(uri).body(request);
   }
 
-  // @PutMapping("/{id}")
-  // @Transactional
-  // public int changeStatus(@PathVariable Long id, @RequestBody Enum<Status>
-  // status) {
-  // return requestRepository.changeStatus(status, id);
-  // }
+  @PutMapping("/{id}")
+  @Transactional
+  public int changeStatus(@PathVariable Long id, @RequestBody StatusForm status) {
+    Status s = Status.valueOf(status.getStatus());
+    return requestRepository.changeStatus(s, id);
+  }
 }
