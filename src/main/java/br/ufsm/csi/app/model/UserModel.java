@@ -28,6 +28,8 @@ public class UserModel implements UserDetails {
 
   private String password;
 
+  private String token;
+
   @ManyToMany
   @JoinTable(name = "tb_users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private List<RoleModel> roles;
@@ -45,6 +47,14 @@ public class UserModel implements UserDetails {
   @Override
   public String getUsername() {
     return this.username;
+  }
+
+  public String getToken() {
+    return token;
+  }
+
+  public void setToken(String token) {
+    this.token = token;
   }
 
   @Override
