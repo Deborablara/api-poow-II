@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -38,7 +39,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authenticationProvider(this.authProvider())
         .authorizeHttpRequests()
         .antMatchers(HttpMethod.POST, "/login").permitAll()
-        .antMatchers(HttpMethod.GET, "/client").hasAuthority("CLIENT");
+        .antMatchers(HttpMethod.GET, "/client").hasAuthority("ADMIN_EMPLOYEE");
+
+    http.addFilterBefore(this.authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
   }
 
@@ -56,6 +59,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
     return authConfig.getAuthenticationManager();
+  }
+
+  @Bean
+  public AuthenticationFilter authenticationFilter() throws Exception {
+    return new AuthenticationFilter();
   }
 
 }
