@@ -1,8 +1,5 @@
 package br.ufsm.csi.app.controller;
 
-import java.net.URI;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.ufsm.csi.app.model.Product;
-import br.ufsm.csi.app.repository.ProductRepository;
+import br.ufsm.csi.app.service.ProductService;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -24,58 +22,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class ProductController {
 
   @Autowired
-  private ProductRepository productRepository;
+  private ProductService productService;
 
   @GetMapping()
-  public List<Product> productList() {
-    List<Product> products = productRepository.findAll();
-
-    return products;
+  public ResponseEntity<?> productList() {
+    return productService.productsList();
   }
 
   @GetMapping("/{id}")
-  public Product product(@PathVariable Long id) {
-    Product product = productRepository.getReferenceById(id);
-
-    return product;
+  public ResponseEntity<?> product(@PathVariable Long id) {
+    return productService.getProduct(id);
   }
 
-  @DeleteMapping("{id}")
+  @DeleteMapping("/{id}")
   @Transactional
   public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
-    productRepository.deleteById(id);
-
-    return ResponseEntity.ok().build();
-  }
-
-  @PutMapping("/{id}")
-  @Transactional
-  public int desactiveProduct(@PathVariable Long id) {
-    return productRepository.desactiveProduct(id);
+    return productService.desactiveProduct(id);
   }
 
   @PutMapping("/update/{id}")
   @Transactional
-  public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product values) {
-    Product product = productRepository.getReferenceById(id);
-    product.setname(values.getname());
-    product.setDescription(values.getDescription());
-    product.setActive(values.getActive());
-
-    return ResponseEntity.ok(product);
+  public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product values) {
+    return productService.updateProduct(id, values);
   }
 
   @PostMapping("/new")
   @Transactional
-  public ResponseEntity<Product> newProduct(
+  public ResponseEntity<?> newProduct(
       @RequestBody Product values,
       UriComponentsBuilder uBuilder) {
-    Product product = new Product(values.getname(), values.getDescription(), values.getActive());
-
-    productRepository.save(product);
-    URI uri = uBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
-
-    return ResponseEntity.created(uri).body(product);
+    return productService.newProduct(values, uBuilder);
   }
 
 }
