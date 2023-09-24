@@ -25,10 +25,13 @@ public class UserDetailsServiceImplements implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
     UserModel user = userRepository.findByUsername(username)
-        .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        .orElseThrow(() -> new UsernameNotFoundException("Usuário ou senha incorretos"));
     UserModel userWichAutorities = userRepository.getUserWithAutorities(user.getUserId());
+
     System.out.println(userWichAutorities.getAuthorities());
+
     UserDetails existingUser = User.withUsername(userWichAutorities.getUsername())
         .password(userWichAutorities.getPassword())
         .authorities(userWichAutorities.getAuthorities()).build();
