@@ -1,6 +1,5 @@
 package br.ufsm.csi.app.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,54 +16,35 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.ufsm.csi.app.forms.VehicleForm;
 import br.ufsm.csi.app.model.Vehicle;
-import br.ufsm.csi.app.repository.ShippingCompanyRepository;
-import br.ufsm.csi.app.repository.VehicleRepository;
+import br.ufsm.csi.app.service.VehicleService;
 
 @RestController
 @RequestMapping("/vehicle")
 public class VehicleController {
 
   @Autowired
-  private VehicleRepository vehicleRepository;
-  @Autowired
-  private ShippingCompanyRepository shippingCompanyRepository;
+  private VehicleService vehicleService;
 
   @GetMapping()
-  public List<Vehicle> listVehicles() {
-    List<Vehicle> vehicles = vehicleRepository.findAll();
-    return vehicles;
+  public ResponseEntity<List<Vehicle>> listVehicles() {
+    return vehicleService.getVehicles();
   }
 
   @GetMapping("/{id}")
-  public Vehicle listVehicle(@PathVariable Long id) {
-    Vehicle vehicle = vehicleRepository.getReferenceById(id);
-    return vehicle;
+  public ResponseEntity<Vehicle> listVehicle(@PathVariable Long id) {
+    return vehicleService.getVehicle(id);
   }
 
   @PutMapping("/{id}")
   @Transactional
-  public int desactiveVehicle(@PathVariable Long id) {
-    return vehicleRepository.desactiveVehicle(id);
+  public ResponseEntity<?> desactiveVehicle(@PathVariable Long id) {
+    return vehicleService.desactiveVehicle(id);
   }
 
   @PostMapping("new")
   @Transactional
   public ResponseEntity<?> newVehicle(@RequestBody VehicleForm values, UriComponentsBuilder uBuilder) {
-
-    Vehicle vehicle = values.newVehicle(shippingCompanyRepository);
-    vehicleRepository.save(vehicle);
-
-    URI uri = uBuilder.path("vehicle/{id}").buildAndExpand(vehicle.getId()).toUri();
-
-    return ResponseEntity.created(uri).body(vehicle);
-  }
-
-  @PutMapping("/update/{id}")
-  @Transactional
-  public ResponseEntity<?> updateVehicle(@PathVariable Long id, @RequestBody VehicleForm values) {
-    Vehicle vehicle = values.update(shippingCompanyRepository, vehicleRepository, id);
-
-    return ResponseEntity.ok(vehicle);
+    return vehicleService.newVehicle(values, uBuilder);
   }
 
 }
