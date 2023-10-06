@@ -7,56 +7,54 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import br.ufsm.csi.app.service.AuthenticationService;
 
+@Component
 public class AuthenticationFilter extends OncePerRequestFilter {
 
-  @Autowired
-  private UserDetailsServiceImplements userDetailsSImplements;
+  private final TokenServiceJWT tokenServiceJWT;
+  private final AuthenticationService authenticationService;
+
+  public AuthenticationFilter(TokenServiceJWT tokenJWT, AuthenticationService authentication) {
+    this.tokenServiceJWT = tokenJWT;
+    this.authenticationService = authentication;
+  }
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws IOException, ServletException {
+  protected void doFilterInternal(HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain filterChain)
+      throws ServletException, IOException {
+    System.out.println("Filtro para autenticação e autorização");
 
-    String url = request.getRequestURI();
+    String tokenJWT = recuperarToken(request);
+    System.out.println("tokenJWT:" + tokenJWT);
 
-    try {
-      if (!url.contains("login")) {
+    if (tokenJWT != null) {
+      String subject = this.tokenServiceJWT.getSubject(tokenJWT);
+      System.out.println("Login da req. " + subject);
 
-        String token = request.getHeader("Authorization");
-        String userName = new JWTUtil().getUserNameToken(token);
-        System.out.println(userName);
-        System.out.println("Token expirado?" + new JWTUtil().isTokenExpired(token));
+      UserDetails userDetails = this.authenticationService.loadUserByUsername(subject);
+      UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
+          null, userDetails.getAuthorities());
 
-        if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-          UserDetails user = this.userDetailsSImplements.loadUserByUsername(userName);
-          UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(token, userName);
-
-          if (!new JWTUtil().isTokenExpired(token)) {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                user, null,
-                user.getAuthorities());
-
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            ;
-          }
-        }
-      }
-
-    } catch (ExpiredJwtException e) {
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
+      SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
     filterChain.doFilter(request, response);
-
   }
 
+  private String recuperarToken(HttpServletRequest request) {
+    String token = request.getHeader("Authorization");
+    if (token != null) {
+      return token.replace("Bearer", "").trim();
+    }
+    return null;
+  }
 }
