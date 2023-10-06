@@ -44,9 +44,9 @@ public class LoginController {
       }
     } catch (Exception e) {
       e.printStackTrace();
-      return ResponseEntity.badRequest().body(e.getMessage());
+      return ResponseEntity.internalServerError().body("Usuário ou senha incorretos");
     }
 
-    return ResponseEntity.badRequest().body("Usuário ou senha incorretos");
+    return ResponseEntity.internalServerError().body("Usuário ou senha incorretos");
   }
 }
