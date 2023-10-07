@@ -30,6 +30,7 @@ public class WebSecurity {
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeRequests(authorize -> {
           authorize
+              .antMatchers(HttpMethod.POST, "/login").permitAll()
               .antMatchers(HttpMethod.GET, "/**").permitAll()
               .antMatchers(HttpMethod.POST,
                   "/clients/new",
