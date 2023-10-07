@@ -30,8 +30,21 @@ public class WebSecurity {
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeRequests(authorize -> {
           authorize
-              .antMatchers(HttpMethod.POST, "/login").permitAll()
-              .antMatchers(HttpMethod.GET, "/clients").hasAuthority("ADMIN_EMPLOYEE")
+              .antMatchers(HttpMethod.GET, "/**").permitAll()
+              .antMatchers(HttpMethod.POST,
+                  "/clients/new",
+                  "/products/new",
+                  "/shipping-company/new",
+                  "/vehicle/new")
+              .hasAuthority("ADMIN_EMPLOYEE")
+              .antMatchers(HttpMethod.PUT,
+                  "/clients/update/{id}",
+                  "/products/update/{id}",
+                  "/shipping-company/update/{id}",
+                  "/vehicle/update/{id}")
+              .hasAuthority("ADMIN_EMPLOYEE")
+              .antMatchers(HttpMethod.POST, "/request/new").hasAnyAuthority("ADMIN_EMPLOYEE")
+              .antMatchers(HttpMethod.PUT, "/request/{id}").hasAnyAuthority("ADMIN_EMPLOYEE", "EMPLOYEE")
               .anyRequest().authenticated();
         })
         .addFilterBefore(this.authenticationFilter, UsernamePasswordAuthenticationFilter.class)

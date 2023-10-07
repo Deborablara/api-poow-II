@@ -35,7 +35,7 @@ public class VehicleController {
     return vehicleService.getVehicle(id);
   }
 
-  @PutMapping("/{id}")
+  @PutMapping("update/{id}")
   @Transactional
   public ResponseEntity<?> desactiveVehicle(@PathVariable Long id) {
     return vehicleService.desactiveVehicle(id);
