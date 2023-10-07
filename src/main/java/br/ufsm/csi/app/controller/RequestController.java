@@ -1,6 +1,5 @@
 package br.ufsm.csi.app.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,52 +17,33 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.ufsm.csi.app.forms.RequestForm;
 import br.ufsm.csi.app.forms.StatusForm;
 import br.ufsm.csi.app.model.Request;
-import br.ufsm.csi.app.model.Status;
-import br.ufsm.csi.app.repository.ClientRepository;
-import br.ufsm.csi.app.repository.ProductRepository;
-import br.ufsm.csi.app.repository.RequestRepository;
-import br.ufsm.csi.app.repository.VehicleRepository;
+import br.ufsm.csi.app.service.RequestService;
 
 @RestController
 @RequestMapping("request")
 public class RequestController {
   @Autowired
-  private RequestRepository requestRepository;
-  @Autowired
-  private VehicleRepository vehicleRepository;
-  @Autowired
-  private ClientRepository clientRepository;
-  @Autowired
-  private ProductRepository productRepository;
+  private RequestService requestService;
 
   @GetMapping
   public List<Request> listRequests() {
-    List<Request> requests = requestRepository.findAll();
-
-    return requests;
+    return requestService.listRequests();
   }
 
   @GetMapping("/{id}")
-  public Request getRequest(@PathVariable Long id) {
-    Request request = requestRepository.getReferenceById(id);
-    return request;
+  public ResponseEntity<Request> getRequest(@PathVariable Long id) {
+    return requestService.getRequest(id);
   }
 
   @PostMapping("/new")
   @Transactional
   public ResponseEntity<?> newRequest(@RequestBody RequestForm values, UriComponentsBuilder uBuilder) {
-    Request request = values.newRequest(productRepository, vehicleRepository, clientRepository);
-    requestRepository.save(request);
-
-    URI uri = uBuilder.path("/request/{id}").buildAndExpand(request.getId()).toUri();
-
-    return ResponseEntity.created(uri).body(request);
+    return requestService.newRequest(values, uBuilder);
   }
 
   @PutMapping("/{id}")
   @Transactional
   public int changeStatus(@PathVariable Long id, @RequestBody StatusForm status) {
-    Status s = Status.valueOf(status.getStatus());
-    return requestRepository.changeStatus(s, id);
+    return requestService.changeStatus(id, status);
   }
 }
