@@ -31,6 +31,7 @@ public class WebSecurity {
         .authorizeRequests(authorize -> {
           authorize
               .antMatchers(HttpMethod.POST, "/login").permitAll()
+              .antMatchers(HttpMethod.GET, "/clients").hasAuthority("ADMIN_EMPLOYEE")
               .anyRequest().authenticated();
         })
         .addFilterBefore(this.authenticationFilter, UsernamePasswordAuthenticationFilter.class)

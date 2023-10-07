@@ -22,7 +22,7 @@ public class AuthenticationService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         Optional<UserModel> usuario = uRepository.findByUsername(name);
-        if (usuario == null) {
+        if (!usuario.isPresent()) {
             throw new UsernameNotFoundException("Usuário não encontrado");
         } else {
             UserDetails user = User.withUsername(usuario.get().getUsername())
