@@ -1,6 +1,5 @@
 package br.ufsm.csi.app.controller;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -17,34 +16,29 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.ufsm.csi.app.model.ShippingCompany;
-import br.ufsm.csi.app.repository.ShippingCompanyRepository;
+import br.ufsm.csi.app.service.ShippingCompanyService;
 
 @RestController
 @RequestMapping("/shipping-company")
 public class ShippingCompanyController {
 
     @Autowired
-    private ShippingCompanyRepository shippingCompanyRepository;
+    private ShippingCompanyService shippingCompanyService;
 
     @GetMapping()
     public List<ShippingCompany> getShippingCompanies() {
-        List<ShippingCompany> shippingCompanies = shippingCompanyRepository.findAll();
-
-        return shippingCompanies;
+        return shippingCompanyService.getShippingCompanies();
     }
 
     @GetMapping("/{id}")
-    public ShippingCompany getShippingCompany(@PathVariable Long id) {
-        ShippingCompany shippingCompany = shippingCompanyRepository.getReferenceById(id);
-
-        return shippingCompany;
+    public ResponseEntity<ShippingCompany> getShippingCompany(@PathVariable Long id) {
+        return shippingCompanyService.getShippingCompany(id);
     }
 
     @PutMapping("/{id}")
     @Transactional
     public int desactiveShippingCompany(@PathVariable Long id) {
-        return shippingCompanyRepository.desactiveShippingCompany(id);
-
+        return shippingCompanyService.desactiveShippingCompany(id);
     }
 
     @PostMapping("/new")
@@ -52,25 +46,14 @@ public class ShippingCompanyController {
     public ResponseEntity<?> newShippingCompany(
             @RequestBody ShippingCompany values,
             UriComponentsBuilder uBuilder) {
-        ShippingCompany shippingCompany = new ShippingCompany(values.getName(), values.getActive());
-
-        shippingCompanyRepository.save(shippingCompany);
-        URI uri = uBuilder.path("/shipping-company/{id}").buildAndExpand(shippingCompany.getId()).toUri();
-
-        return ResponseEntity.created(uri).body(shippingCompany);
+        return shippingCompanyService.newShippingCompany(values, uBuilder);
     }
 
     @PutMapping("/update/{id}")
     @Transactional
     public ResponseEntity<ShippingCompany> updateShippingCompany(@PathVariable Long id,
             @RequestBody ShippingCompany values) {
-        ShippingCompany shippingCompany = shippingCompanyRepository.getReferenceById(id);
-
-        shippingCompany.setName(values.getName());
-        shippingCompany.setActive(values.getActive());
-
-        return ResponseEntity.ok(shippingCompany);
-
+        return shippingCompanyService.updateShippingCompany(id, values);
     }
 
 }
