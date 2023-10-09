@@ -1,5 +1,6 @@
 package br.ufsm.csi.app.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class UserModel implements UserDetails {
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "tb_users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private List<RoleModel> roles;
+  private List<RoleModel> roles = new ArrayList<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -91,6 +92,10 @@ public class UserModel implements UserDetails {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public void addRole(RoleModel role) {
+    roles.add(role);
   }
 
 }

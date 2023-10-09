@@ -3,9 +3,9 @@ package br.ufsm.csi.app.forms;
 public class UserForm {
   private String name;
   private String password;
-  private int role_id;
+  private Long role_id;
 
-  public UserForm(String name, String password, int role_id) {
+  public UserForm(String name, String password, Long role_id) {
     this.name = name;
     this.password = password;
     this.role_id = role_id;
@@ -27,11 +27,11 @@ public class UserForm {
     this.password = password;
   }
 
-  public int getRole_id() {
+  public Long getRole_id() {
     return role_id;
   }
 
-  public void setRole_id(int role_id) {
+  public void setRole_id(Long role_id) {
     this.role_id = role_id;
   }
 }
