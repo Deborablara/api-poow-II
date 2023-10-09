@@ -1,7 +1,5 @@
 package br.ufsm.csi.app.model;
 
-import java.util.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,8 +16,8 @@ public class RoleModel implements GrantedAuthority {
   private static final long serialVersionUID = 1L;
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private UUID roleId;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long roleId;
 
   @Enumerated(EnumType.STRING)
   private RoleName roleName;
@@ -33,11 +31,11 @@ public class RoleModel implements GrantedAuthority {
     return serialVersionUID;
   }
 
-  public UUID getRoleId() {
+  public Long getRoleId() {
     return roleId;
   }
 
-  public void setRoleId(UUID roleId) {
+  public void setRoleId(Long roleId) {
     this.roleId = roleId;
   }
 
