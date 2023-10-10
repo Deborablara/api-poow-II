@@ -31,7 +31,6 @@ public class WebSecurity {
         .authorizeRequests(authorize -> {
           authorize
               .antMatchers(HttpMethod.POST, "/login").permitAll()
-              .antMatchers(HttpMethod.GET, "/**").permitAll()
               .antMatchers(HttpMethod.POST,
                   "/clients/new",
                   "/products/new",
