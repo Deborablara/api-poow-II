@@ -55,12 +55,17 @@ public class RequestService {
   }
 
   @Transactional
-  public int changeStatus(Long id, StatusForm status) {
+  public ResponseEntity<String> changeStatus(Long id, StatusForm status) {
     try {
       Status s = Status.valueOf(status.getStatus());
-      return requestRepository.changeStatus(s, id);
+      int result = requestRepository.changeStatus(s, id);
+      if (result > 0) {
+        return ResponseEntity.ok("Status alterado com sucesso");
+      } else {
+        return ResponseEntity.internalServerError().body("Falha ao alterar o status");
+      }
     } catch (Exception e) {
-      return -1;
+      return ResponseEntity.internalServerError().body("Erro ao processar a solicitação");
     }
   }
 }

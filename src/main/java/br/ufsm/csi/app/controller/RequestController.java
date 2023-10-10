@@ -43,7 +43,7 @@ public class RequestController {
 
   @PutMapping("/{id}")
   @Transactional
-  public int changeStatus(@PathVariable Long id, @RequestBody StatusForm status) {
+  public ResponseEntity<String> changeStatus(@PathVariable Long id, @RequestBody StatusForm status) {
     return requestService.changeStatus(id, status);
   }
 }
