@@ -1,8 +1,8 @@
 package br.ufsm.csi.app.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,8 +22,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserModel implements UserDetails {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private UUID userId;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long userId;
 
   private String username;
 
@@ -33,7 +33,7 @@ public class UserModel implements UserDetails {
 
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "tb_users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-  private List<RoleModel> roles;
+  private List<RoleModel> roles = new ArrayList<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -78,11 +78,11 @@ public class UserModel implements UserDetails {
     return true;
   }
 
-  public UUID getUserId() {
+  public Long getUserId() {
     return userId;
   }
 
-  public void setUserId(UUID userId) {
+  public void setUserId(Long userId) {
     this.userId = userId;
   }
 
@@ -92,6 +92,10 @@ public class UserModel implements UserDetails {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public void addRole(RoleModel role) {
+    roles.add(role);
   }
 
 }

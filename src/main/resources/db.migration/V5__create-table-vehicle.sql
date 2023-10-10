@@ -5,3 +5,8 @@ create table vehicle(
         active boolean,
         FOREIGN KEY (shipping_company_id) REFERENCES shipping_company(id)
 );
+
+insert into vehicle(plate_number, shipping_company_id, active) values('5FDE52', 1, true)
+insert into vehicle(plate_number, shipping_company_id, active) values('5FDE32', 2, true)
+insert into vehicle(plate_number, shipping_company_id, active) values('5FDE12', 3, true)
+insert into vehicle(plate_number, shipping_company_id, active) values('5FDE54', 2, true)
