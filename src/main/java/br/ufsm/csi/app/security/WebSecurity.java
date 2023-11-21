@@ -1,9 +1,11 @@
 package br.ufsm.csi.app.security;
 
+import br.ufsm.csi.app.service.AuthenticationService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -11,16 +13,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurity {
 
-  private final AuthenticationFilter authenticationFilter;
+  private final AuthenticationService authService;
 
-  public WebSecurity(AuthenticationFilter filter) {
-    this.authenticationFilter = filter;
+  public WebSecurity(AuthenticationService authService) {
+    this.authService = authService;
+
   }
 
   @Bean
@@ -30,7 +33,7 @@ public class WebSecurity {
         .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeRequests(authorize -> {
           authorize
-              .antMatchers(HttpMethod.POST, "/login").permitAll()
+              .antMatchers(HttpMethod.POST, "/login", "/user/new").permitAll()
               .antMatchers(HttpMethod.POST,
                   "/clients/new",
                   "/products/new",
@@ -46,15 +49,16 @@ public class WebSecurity {
               .antMatchers(HttpMethod.POST, "/request/new").hasAnyAuthority("ADMIN_EMPLOYEE")
               .antMatchers(HttpMethod.PUT, "/request/{id}").hasAnyAuthority("ADMIN_EMPLOYEE", "EMPLOYEE")
               .anyRequest().authenticated();
-        })
-        .addFilterBefore(this.authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .build();
+        }).build();
+
   }
 
   @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+  public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder)
       throws Exception {
-    return configuration.getAuthenticationManager();
+    AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+    authenticationManagerBuilder.userDetailsService(authService).passwordEncoder(passwordEncoder);
+    return authenticationManagerBuilder.build();
   }
 
   @Bean

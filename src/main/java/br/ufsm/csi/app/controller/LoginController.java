@@ -1,5 +1,8 @@
 package br.ufsm.csi.app.controller;
 
+import br.ufsm.csi.app.DTOS.UserLogin;
+import br.ufsm.csi.app.security.JwtUtil;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -15,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.ufsm.csi.app.model.UserModel;
 import br.ufsm.csi.app.repository.UserRepository;
-import br.ufsm.csi.app.security.TokenServiceJWT;
 
 @RestController
 public class LoginController {
@@ -29,24 +31,34 @@ public class LoginController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<Object> auth(@RequestBody UserModel user) {
+  public ResponseEntity<Object> auth(@RequestBody UserLogin user) {
     try {
+      System.out.println(user.getUsername());
       final Authentication authenticate = authenticationManager
           .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
       if (authenticate.isAuthenticated()) {
         SecurityContextHolder.getContext().setAuthentication(authenticate);
-        Optional<UserModel> userAuthenticated = userRepository.findByUsername(user.getUsername());
-        String token = new TokenServiceJWT().gerarToken(userAuthenticated);
-        userAuthenticated.get().setToken(token);
+        String username = authenticate.getName();
+        Optional<UserModel> userModel = this.userRepository.findByUsername(username);
+        if(userModel.isPresent()){
 
-        return new ResponseEntity<>(userAuthenticated, HttpStatus.OK);
+          String token = new JwtUtil().createToken(userModel.get());
+          userModel.get().setToken(token);
+          return new ResponseEntity<>(userModel, HttpStatus.OK);
+        }else{
+          throw new Exception("deu ruim");
+        }
+
+
+
+      }else{
+        System.out.println("vai tomar no cu");
       }
     } catch (Exception e) {
       e.printStackTrace();
       return ResponseEntity.internalServerError().body("Usuário ou senha incorretos");
     }
-
-    return ResponseEntity.internalServerError().body("Usuário ou senha incorretos");
+    return ResponseEntity.ok().body("kevinho");
   }
 }
