@@ -34,11 +34,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     System.out.println("Filtro para autenticação e autorização");
 
     String tokenJWT = recuperarToken(request);
-    System.out.println("tokenJWT:" + tokenJWT);
 
     if (tokenJWT != null) {
       String subject = this.tokenServiceJWT.getSubject(tokenJWT);
-      System.out.println("Login da req. " + subject);
 
       UserDetails userDetails = this.authenticationService.loadUserByUsername(subject);
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails,
@@ -52,6 +50,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
   private String recuperarToken(HttpServletRequest request) {
     String token = request.getHeader("Authorization");
+    System.out.println("token: " + token);
     if (token != null) {
       return token.replace("Bearer", "").trim();
     }
