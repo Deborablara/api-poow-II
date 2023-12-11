@@ -1,0 +1,45 @@
+version: '3'
+# docker-compose -p "avaliarprojetos" up -d
+services:
+  avaliarprojetos:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8080"
+    depends_on:
+      PostgresSQL:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - rede
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgresSQL:5432/teste
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=since2001
+  PostgresSQL:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=since2001
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=teste
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - rede
+    volumes:
+      - pg-data:/docker-entrypoint-initdb.d
+
+volumes:
+  pg-data:
+networks:
+  rede:
+    driver: bridge
+
+
+
