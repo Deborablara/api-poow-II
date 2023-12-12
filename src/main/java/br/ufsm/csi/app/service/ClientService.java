@@ -1,5 +1,6 @@
 package br.ufsm.csi.app.service;
 
+import br.ufsm.csi.app.utils.DefaultResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -72,7 +73,7 @@ public class ClientService {
   public ResponseEntity<?> desactiveClient(Long id) {
     try {
       clientRepository.desactiveClient(id);
-      return ResponseEntity.ok().body("Cliente desativado com sucesso");
+      return ResponseEntity.ok().body(new DefaultResponse("Cliente desativado com sucesso", 200));
     } catch (Exception e) {
       return ResponseEntity.internalServerError().body("Falha ao desativar este cliente");
     }
